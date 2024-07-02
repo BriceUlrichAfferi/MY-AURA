@@ -26,6 +26,8 @@
     app:layout_constraintTop_toTopOf="parent"
     />
 
+
+
   <EditText
     android:id="@+id/amount"
     android:layout_width="0dp"
@@ -40,6 +42,19 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/recipient"
     />
+
+  <EditText
+      android:id="@+id/sender"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:hint="sender"
+      android:inputType="text"
+      android:selectAllOnFocus="true"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/amount"
+      />
 
   <Button
     android:id="@+id/transfer"

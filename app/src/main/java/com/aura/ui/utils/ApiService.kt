@@ -4,8 +4,9 @@ package com.aura.ui.utils
 
 import com.aura.ui.models.LoginRequest
 import com.aura.ui.models.LoginResponse
-import com.aura.ui.models.TransfertRequest
-import com.aura.ui.models.TransfertResponse
+import com.aura.ui.models.TransferRequest
+import com.aura.ui.models.TransferResponse
+
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -14,7 +15,9 @@ interface ApiService {
     suspend fun login(@Body request: LoginRequest): LoginResponse
 
     @POST("transfer")
-    suspend fun transfer(@Body transferRequest: TransfertRequest): TransfertResponse
+    suspend fun transfer(@Body transferRequest: TransferRequest): TransferResponse
+
+
 }
 
 

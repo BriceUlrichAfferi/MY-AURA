@@ -9,7 +9,7 @@ class TransferViewModel : ViewModel() {
     private val _transferFormState = MutableLiveData<TransferFormState>()
     val transferFormState: LiveData<TransferFormState> = _transferFormState
 
-    fun transferDataChanged(recipient: String, amount: String) {
+    fun transferDataChanged(recipient: String, amount: String, toString: String) {
         if (!isRecipientValid(recipient)) {
             _transferFormState.value = TransferFormState(recipientError = "Invalid recipient")
         } else if (!isAmountValid(amount)) {
