@@ -33,6 +33,10 @@ android {
   buildFeatures {
     viewBinding = true
   }
+
+  testOptions {
+    unitTests.isReturnDefaultValues = true
+  }
 }
 
 dependencies {
@@ -63,9 +67,24 @@ dependencies {
   //DataStore dependency
   implementation ("androidx.datastore:datastore-preferences:1.1.1")
   implementation ("androidx.datastore:datastore-core:1.1.1")
-
+  implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
+  implementation("androidx.test.ext:junit-ktx:1.2.1")
 
   testImplementation("junit:junit:4.13.2")
-  androidTestImplementation("androidx.test.ext:junit:1.1.5")
-  androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+  testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
+  testImplementation ("io.mockk:mockk:1.12.0")
+  androidTestImplementation("androidx.test.ext:junit:1.2.1")
+  androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+  testImplementation ("androidx.arch.core:core-testing:2.1.0")
+  testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+  testImplementation ("io.mockk:mockk:1.12.0")
+
+
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+  // Mockito dependencies
+
+  testImplementation("org.mockito:mockito-inline:4.3.1")
+  testImplementation("org.mockito:mockito-android:3.12.4")
+  testImplementation ("org.mockito:mockito-core:3.12.4")
+
 }

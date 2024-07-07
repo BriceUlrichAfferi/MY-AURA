@@ -4,7 +4,6 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -29,37 +28,49 @@ class TransferActivity : AppCompatActivity() {
 
     val recipientEditText = binding.recipient
     val amountEditText = binding.amount
-    val senderEditText = binding.sender
 
     val transferButton = binding.transfer
     val loadingProgressBar = binding.loading
 
-    transferViewModel.transferFormState.observe(this@TransferActivity, Observer {
-      val transferState = it ?: return@Observer
+    lifecycleScope.launch {
+      transferViewModel.transferFormState.collect { transferState ->
+        transferButton.isEnabled = transferState.isDataValid
 
-      transferButton.isEnabled = transferState.isDataValid
+        if (transferState.recipientError != null) {
+          recipientEditText.error = transferState.recipientError
+        }
+        if (transferState.amountError != null) {
+          amountEditText.error = transferState.amountError
+        }
+      }
+    }
 
-      if (transferState.recipientError != null) {
-        recipientEditText.error = transferState.recipientError
+    lifecycleScope.launch {
+      transferViewModel.transferResult.collect { result ->
+        result?.let {
+          loadingProgressBar.visibility = View.GONE
+          if (it) {
+            Toast.makeText(this@TransferActivity, "Transfer successful", Toast.LENGTH_LONG).show()
+            setResult(Activity.RESULT_OK)
+            finish()
+          } else {
+            Toast.makeText(this@TransferActivity, "Transfer failed: Check Receiver and Amount", Toast.LENGTH_LONG).show()
+          }
+        }
       }
-      if (transferState.amountError != null) {
-        amountEditText.error = transferState.amountError
-      }
-    })
+    }
 
     recipientEditText.afterTextChanged {
       transferViewModel.transferDataChanged(
         recipientEditText.text.toString(),
-        amountEditText.text.toString(),
-        senderEditText.text.toString()
+        amountEditText.text.toString()
       )
     }
 
     amountEditText.afterTextChanged {
       transferViewModel.transferDataChanged(
         recipientEditText.text.toString(),
-        amountEditText.text.toString(),
-        senderEditText.text.toString()
+        amountEditText.text.toString()
       )
     }
 
@@ -68,36 +79,13 @@ class TransferActivity : AppCompatActivity() {
 
       val recipient = recipientEditText.text.toString()
       val amount = amountEditText.text.toString().toDouble()
-      val sender = "1234" // Assuming sender ID is 1234 for this example
+      val sender = "1234" // Assuming sender ID is 1234
 
-      val request = TransferRequest(sender, recipient, amount)
-
-      Log.d("TransferActivity", "Request: $request")
-
-      lifecycleScope.launch {
-        try {
-          val response = RetrofitInstance.api.transfer(request)
-          loadingProgressBar.visibility = View.GONE
-
-          if (response.result) {
-            Toast.makeText(this@TransferActivity, "Transfer successful", Toast.LENGTH_LONG).show()
-            setResult(Activity.RESULT_OK)
-            finish()
-          } else {
-            Log.e("TransferActivity", "Transfer failed: $response")
-            Toast.makeText(this@TransferActivity, "Transfer failed", Toast.LENGTH_LONG).show()
-          }
-        } catch (e: Exception) {
-          loadingProgressBar.visibility = View.GONE
-          Log.e("TransferActivity", "Error during transfer", e)
-          Toast.makeText(this@TransferActivity, "Network error: ${e.message}", Toast.LENGTH_LONG)
-            .show()
-        }
-      }
+      transferViewModel.initiateTransfer(sender, recipient, amount)
     }
   }
 
-  fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+  private fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
       override fun afterTextChanged(s: Editable?) {
         afterTextChanged.invoke(s.toString())

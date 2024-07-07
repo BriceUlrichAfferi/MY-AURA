@@ -4,5 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class TransferResponse(
 
-    @SerializedName("result") val result: Boolean
+    @SerializedName("result") val result: Boolean,
+    @SerializedName("amount") val amount: Double
 )

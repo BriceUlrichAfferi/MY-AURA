@@ -17,7 +17,6 @@ interface ApiService {
     @POST("transfer")
     suspend fun transfer(@Body transferRequest: TransferRequest): TransferResponse
 
-
 }
 
 
